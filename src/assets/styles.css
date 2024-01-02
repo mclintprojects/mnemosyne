@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-#game {
-  padding: 24px;
+.button {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 6px 12px;
+  background: black;
+  color: white;
+}
+
+textarea {
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 12px;
 }
