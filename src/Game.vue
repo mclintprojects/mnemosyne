@@ -1,6 +1,6 @@
 <template>
   <div class="scene">
-    <div id="game">
+    <div id="game" class="shadow-2xl">
       <div class="text-white">
         <p class="font-bold uppercase">M1</p>
         <p class="text-sm text-gray-300">Game player</p>
@@ -52,14 +52,39 @@
           <p>{{ shortenedRecollectionSoFar }}</p>
         </div>
       </div>
+      <div class="buttons"></div>
+      <div class="keypads mt-16">
+        <div class="keypads-h-grid">
+          <key-pad :value="1" />
+          <key-pad :value="2" />
+          <key-pad :value="3" />
+        </div>
+        <div class="keypads-h-grid">
+          <key-pad :value="4" />
+          <key-pad :value="5" />
+          <key-pad :value="6" />
+        </div>
+        <div class="keypads-h-grid">
+          <key-pad :value="7" />
+          <key-pad :value="6" />
+          <key-pad :value="8" />
+        </div>
+        <div class="keypads-h-grid">
+          <key-pad :value="1" />
+          <key-pad :value="0" />
+          <key-pad :value="3" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import rs from "randomstring";
+import KeyPad from "./components/KeyPad.vue";
 
 export default {
+  components: { KeyPad },
   name: "Game",
   computed: {
     lengthOfTextSoFar() {
@@ -146,5 +171,17 @@ export default {
   padding: 24px;
   height: 197px;
   color: var(--secondary-text-color);
+}
+
+.keypads {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  row-gap: 24px;
+}
+
+.keypads-h-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 </style>
