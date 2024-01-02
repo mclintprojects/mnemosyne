@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background-color: #0c0c0c;
+  --secondary-text-color: #292d32;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+p {
+  text-align: left;
+}
+
 .button {
   font-size: 12px;
   font-weight: bold;

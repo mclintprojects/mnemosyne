@@ -1,23 +1,57 @@
 <template>
-  <div id="game">
-    <div class="flex justify-between items-center p-4 bg-gray-100">
-      <p class="text-sm uppercase text-gray-500">Mnemosyne</p>
-      <p class="text-sm font-bold uppercase text-gray-800">
-        Score &bull; {{ score }}
-      </p>
-    </div>
-    <div class="p-4">
-      <p class="text-sm uppercase text-gray-500">Next char</p>
-      <p class="text-8xl text-gray-900">{{ currentCharacter }}</p>
-    </div>
-    <div class="px-4 mt-10">
-      <textarea
-        v-model="userEntry"
-        rows="10"
-        resize="none"
-        class="w-full"
-        @input="submitEntry"
-      ></textarea>
+  <div class="scene">
+    <div id="game">
+      <div class="text-white">
+        <p class="font-bold uppercase">M1</p>
+        <p class="text-sm text-gray-300">Game player</p>
+      </div>
+      <div class="screen mt-6">
+        <div class="flex items-center justify-between">
+          <div class="flex">
+            <div class="flex items-center mr-3">
+              <img src="./assets/images/heart.svg" />
+              <p class="ml-2">{{ livesRemaining }}</p>
+            </div>
+            <div class="flex items-center">
+              <img src="./assets/images/medal-star.svg" />
+              <p class="ml-2">{{ score }}</p>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <img src="./assets/images/text.svg" />
+            <p class="ml-2">
+              {{ lengthOfTextSoFar }} digit{{
+                lengthOfTextSoFar > 1 ? "s" : ""
+              }}
+            </p>
+          </div>
+        </div>
+        <div
+          class="w-full flex justify-center items-center"
+          style="height: 88px"
+        >
+          <div v-if="gameplayState == 'inplay'">
+            <p class="text-3xl font-bold text-center">{{ currentDigit }}</p>
+            <p class="text-sm uppercase">current digit</p>
+          </div>
+          <div v-if="gameplayState == 'correct_guess'">
+            <img src="./assets/images/verify.svg" class="mx-auto" />
+            <p class="text-sm mt-2">Damn, you're good!</p>
+          </div>
+          <div v-if="gameplayState == 'wrong_guess'">
+            <img src="./assets/images/incorrect.svg" class="mx-auto" />
+            <p class="text-sm mt-2">That ain’t it!</p>
+          </div>
+          <div v-if="gameplayState == 'game_over'">
+            <img src="./assets/images/judge.svg" class="mx-auto" />
+            <p class="text-sm mt-2">Game over!</p>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm uppercase">Your entry</p>
+          <p>{{ shortenedRecollectionSoFar }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -27,32 +61,51 @@ import rs from "randomstring";
 
 export default {
   name: "Game",
+  computed: {
+    lengthOfTextSoFar() {
+      return this.textSoFar.length;
+    },
+    isValidRecollectionSoFar() {
+      const expected = this.text.substring(0, this.userEntry.length);
+      return this.userEntry == expected;
+    },
+    shortenedRecollectionSoFar() {
+      return `...${this.userEntry.substring(
+        Math.max(0, this.userEntry.length - 10)
+      )}`;
+    },
+  },
   data() {
     return {
       score: 0,
-      word: "",
-      wordSoFar: "",
-      currentCharacter: "a",
+      text: "",
+      textSoFar: "",
+      currentDigit: "a",
       currentCharacterIndex: 0,
       userEntry: "",
+      livesRemaining: 3,
+      gameplayState: "game_over",
       settings: {
-        charset: "alphabetic",
+        charset: "numeric",
       },
     };
   },
   methods: {
     setCurrentCharacter() {
-      this.wordSoFar = this.word.substring(0, this.currentCharacterIndex + 1);
-      this.currentCharacter = this.word[this.currentCharacterIndex];
+      this.textSoFar = this.word.substring(0, this.currentCharacterIndex + 1);
+      this.currentDigit = this.word[this.currentCharacterIndex];
       this.userEntry = "";
     },
     submitEntry() {
-      console.log({ wordSoFar: this.wordSoFar });
-      if (this.userEntry.length == this.wordSoFar.length) {
-        if (this.userEntry == this.wordSoFar) {
+      if (this.userEntry.length == this.textSoFar.length) {
+        if (this.userEntry == this.textSoFar) {
           this.currentCharacterIndex++;
           this.score++;
           this.setCurrentCharacter();
+
+          this.$toasted.success("Correct!");
+        } else {
+          this.$toasted.error("Incorrect guess. Try again!");
         }
       }
     },
@@ -65,10 +118,12 @@ export default {
 </script>
 
 <style>
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+.scene {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #game {
@@ -76,8 +131,20 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  width: 100vw;
-  height: 100vh;
+  background: var(--background-color);
+  width: 390px;
+  margin: 0 auto;
+  height: 844px;
+  padding: 24px;
+  border-radius: 20px;
+}
+
+.screen {
+  background-color: #67b094;
+  border-radius: 6px;
+  width: 100%;
+  padding: 24px;
+  height: 197px;
+  color: var(--secondary-text-color);
 }
 </style>
