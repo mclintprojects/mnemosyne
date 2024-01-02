@@ -70,9 +70,13 @@
           <key-pad :value="8" />
         </div>
         <div class="keypads-h-grid">
-          <key-pad :value="1" />
+          <div class="keypads-h-grid-item">
+            <icon-button src="eraser.svg" />
+          </div>
           <key-pad :value="0" />
-          <key-pad :value="3" />
+          <div class="keypads-h-grid-item">
+            <icon-button src="direct-right.svg" />
+          </div>
         </div>
       </div>
     </div>
@@ -82,9 +86,10 @@
 <script>
 import rs from "randomstring";
 import KeyPad from "./components/KeyPad.vue";
+import IconButton from "./components/IconButton.vue";
 
 export default {
-  components: { KeyPad },
+  components: { KeyPad, IconButton },
   name: "Game",
   computed: {
     lengthOfTextSoFar() {
@@ -183,5 +188,11 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+}
+
+.keypads-h-grid-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
