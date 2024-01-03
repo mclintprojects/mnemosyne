@@ -1,5 +1,5 @@
 <template>
-  <div class="icon-button">
+  <div class="icon-button" @click="$emit('click')">
     <img :src="require(`@/assets/images/${src}`)" />
   </div>
 </template>
@@ -24,5 +24,6 @@ export default {
   border-radius: 50px;
   background: #ff2323;
   box-shadow: 0px -6px 0px 0px #a61717;
+  user-select: none;
 }
 </style>

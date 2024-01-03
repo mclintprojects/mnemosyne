@@ -39,5 +39,6 @@ p {
   color: #717171;
   font-size: 48px;
   line-height: normal;
+  user-select: none;
 }
 </style>
