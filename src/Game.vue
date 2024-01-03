@@ -53,8 +53,10 @@
           </div>
         </div>
       </div>
-      <div class="buttons"></div>
-      <div class="keypads mt-16">
+      <div class="mt-6 flex justify-end label-buttons">
+        <label-button label="Restart" @click="restartGame" />
+      </div>
+      <div class="keypads mt-12">
         <div class="keypads-h-grid">
           <div class="keypads-h-grid-item">
             <key-pad :value="1" @keypress="handleKeyPress" />
@@ -108,9 +110,10 @@
 import rs from "randomstring";
 import KeyPad from "./components/KeyPad.vue";
 import IconButton from "./components/IconButton.vue";
+import LabelButton from "./components/LabelButton.vue";
 
 export default {
-  components: { KeyPad, IconButton },
+  components: { KeyPad, IconButton, LabelButton },
   name: "Game",
   computed: {
     textSoFar() {
@@ -248,6 +251,7 @@ export default {
   padding: 24px;
   height: 170px;
   color: var(--secondary-text-color);
+  box-shadow: 0px 8px 0px 0px rgba(0, 0, 0, 0.54) inset;
 }
 
 .keypads {
