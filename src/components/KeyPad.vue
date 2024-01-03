@@ -19,8 +19,8 @@ export default {
 
 <style scoped>
 .keypad {
-  height: 86px;
-  width: 100px;
+  height: 66px;
+  width: 80px;
   padding: 33px 47px;
   display: flex;
   justify-content: center;
@@ -37,8 +37,23 @@ export default {
 
 p {
   color: #717171;
-  font-size: 48px;
+  font-size: 32px;
   line-height: normal;
   user-select: none;
+}
+
+@media screen and (max-device-width: 375px) {
+  .keypad {
+    height: 24px;
+    width: 40px;
+    padding: 20px 34px;
+  }
+
+  p {
+    font-size: 24px;
+  }
+}
+
+@media screen and (max-width: 812px) {
 }
 </style>

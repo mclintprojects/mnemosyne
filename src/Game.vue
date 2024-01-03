@@ -33,7 +33,7 @@
           <div v-if="gameplayState == 'recollecting'" class="w-full">
             <p class="text-sm uppercase">what's the text so far?</p>
             <p class="text-2xl">
-              <span class="blinking" v-if="userEntryArray.length == 0">__</span
+              <span class="blinking" v-if="userEntryArray.length == 0">_</span
               ><span v-else class="font-bold">{{
                 shortenedRecollectionSoFar
               }}</span>
@@ -56,25 +56,45 @@
       <div class="buttons"></div>
       <div class="keypads mt-16">
         <div class="keypads-h-grid">
-          <key-pad :value="1" @keypress="handleKeyPress" />
-          <key-pad :value="2" @keypress="handleKeyPress" />
-          <key-pad :value="3" @keypress="handleKeyPress" />
+          <div class="keypads-h-grid-item">
+            <key-pad :value="1" @keypress="handleKeyPress" />
+          </div>
+          <div class="keypads-h-grid-item">
+            <key-pad :value="2" @keypress="handleKeyPress" />
+          </div>
+          <div class="keypads-h-grid-item">
+            <key-pad :value="3" @keypress="handleKeyPress" />
+          </div>
         </div>
         <div class="keypads-h-grid">
-          <key-pad :value="4" @keypress="handleKeyPress" />
-          <key-pad :value="5" @keypress="handleKeyPress" />
-          <key-pad :value="6" @keypress="handleKeyPress" />
+          <div class="keypads-h-grid-item">
+            <key-pad :value="4" @keypress="handleKeyPress" />
+          </div>
+          <div class="keypads-h-grid-item">
+            <key-pad :value="5" @keypress="handleKeyPress" />
+          </div>
+          <div class="keypads-h-grid-item">
+            <key-pad :value="6" @keypress="handleKeyPress" />
+          </div>
         </div>
         <div class="keypads-h-grid">
-          <key-pad :value="7" @keypress="handleKeyPress" />
-          <key-pad :value="8" @keypress="handleKeyPress" />
-          <key-pad :value="9" @keypress="handleKeyPress" />
+          <div class="keypads-h-grid-item">
+            <key-pad :value="7" @keypress="handleKeyPress" />
+          </div>
+          <div class="keypads-h-grid-item">
+            <key-pad :value="8" @keypress="handleKeyPress" />
+          </div>
+          <div class="keypads-h-grid-item">
+            <key-pad :value="9" @keypress="handleKeyPress" />
+          </div>
         </div>
         <div class="keypads-h-grid">
           <div class="keypads-h-grid-item">
             <icon-button src="eraser.svg" @click="deleteCharacter" />
           </div>
-          <key-pad :value="0" @keypress="handleKeyPress" />
+          <div class="keypads-h-grid-item">
+            <key-pad :value="0" @keypress="handleKeyPress" />
+          </div>
           <div class="keypads-h-grid-item">
             <icon-button src="direct-right.svg" @click="submitEntry" />
           </div>
@@ -226,14 +246,14 @@ export default {
   border-radius: 6px;
   width: 100%;
   padding: 24px;
-  height: 197px;
+  height: 170px;
   color: var(--secondary-text-color);
 }
 
 .keypads {
   display: grid;
   grid-template-rows: repeat(4, 1fr);
-  row-gap: 24px;
+  row-gap: 32px;
 }
 
 .keypads-h-grid {
@@ -246,5 +266,19 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media screen and (max-device-width: 375px) {
+  .keypads {
+    row-gap: 8px;
+  }
+}
+
+@media screen and (max-width: 812px) {
+  #game {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0px;
+  }
 }
 </style>
