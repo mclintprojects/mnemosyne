@@ -23,7 +23,7 @@ export default {
   flex-shrink: 0;
   border-radius: 50px;
   background: #ff2323;
-  box-shadow: 0px -6px 0px 0px #a61717;
+  box-shadow: 0px -6px 0px 0px #220202;
   user-select: none;
 }
 </style>

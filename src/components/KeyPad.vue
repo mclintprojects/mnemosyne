@@ -27,7 +27,7 @@ export default {
   align-items: center;
   border-radius: 50px;
   background: #fff;
-  box-shadow: 0px -6px 0px 0px #818181;
+  box-shadow: 0px -6px 0px 0px #111111;
   transition: all 700ms;
 }
 
