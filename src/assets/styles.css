@@ -13,8 +13,28 @@
   box-sizing: border-box;
 }
 
+@keyframes blinking {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 p {
   text-align: left;
+}
+
+textarea {
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 12px;
 }
 
 .button {
@@ -25,8 +45,8 @@ p {
   color: white;
 }
 
-textarea {
-  border: 1px solid black;
-  border-radius: 8px;
-  padding: 12px;
+.blinking {
+  animation-name: blinking;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
 }

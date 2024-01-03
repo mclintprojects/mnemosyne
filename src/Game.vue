@@ -20,19 +20,24 @@
           <div class="flex items-center">
             <img src="./assets/images/text.svg" />
             <p class="ml-2">
-              {{ lengthOfTextSoFar }} digit{{
-                lengthOfTextSoFar > 1 ? "s" : ""
-              }}
+              {{ lengthOfMemorizedTextSoFar }}
+              memorized
             </p>
           </div>
         </div>
-        <div
-          class="w-full flex justify-center items-center"
-          style="height: 88px"
-        >
+        <div class="w-full flex justify-center items-center mt-6">
           <div v-if="gameplayState == 'inplay'">
-            <p class="text-3xl font-bold text-center">{{ currentDigit }}</p>
-            <p class="text-sm uppercase">current digit</p>
+            <p class="text-6xl font-bold text-center">{{ currentDigit }}</p>
+            <p class="text-sm uppercase">memorize this!</p>
+          </div>
+          <div v-if="gameplayState == 'recollecting'" class="w-full">
+            <p class="text-sm uppercase">what's the text so far?</p>
+            <p class="text-2xl">
+              <span class="blinking" v-if="userEntryArray.length == 0">__</span
+              ><span v-else class="font-bold">{{
+                shortenedRecollectionSoFar
+              }}</span>
+            </p>
           </div>
           <div v-if="gameplayState == 'correct_guess'">
             <img src="./assets/images/verify.svg" class="mx-auto" />
@@ -47,35 +52,31 @@
             <p class="text-sm mt-2">Game over!</p>
           </div>
         </div>
-        <div>
-          <p class="text-sm uppercase">Your entry</p>
-          <p>{{ shortenedRecollectionSoFar }}</p>
-        </div>
       </div>
       <div class="buttons"></div>
       <div class="keypads mt-16">
         <div class="keypads-h-grid">
-          <key-pad :value="1" />
-          <key-pad :value="2" />
-          <key-pad :value="3" />
+          <key-pad :value="1" @keypress="handleKeyPress" />
+          <key-pad :value="2" @keypress="handleKeyPress" />
+          <key-pad :value="3" @keypress="handleKeyPress" />
         </div>
         <div class="keypads-h-grid">
-          <key-pad :value="4" />
-          <key-pad :value="5" />
-          <key-pad :value="6" />
+          <key-pad :value="4" @keypress="handleKeyPress" />
+          <key-pad :value="5" @keypress="handleKeyPress" />
+          <key-pad :value="6" @keypress="handleKeyPress" />
         </div>
         <div class="keypads-h-grid">
-          <key-pad :value="7" />
-          <key-pad :value="6" />
-          <key-pad :value="8" />
+          <key-pad :value="7" @keypress="handleKeyPress" />
+          <key-pad :value="8" @keypress="handleKeyPress" />
+          <key-pad :value="9" @keypress="handleKeyPress" />
         </div>
         <div class="keypads-h-grid">
           <div class="keypads-h-grid-item">
-            <icon-button src="eraser.svg" />
+            <icon-button src="eraser.svg" @click="deleteCharacter" />
           </div>
-          <key-pad :value="0" />
+          <key-pad :value="0" @keypress="handleKeyPress" />
           <div class="keypads-h-grid-item">
-            <icon-button src="direct-right.svg" />
+            <icon-button src="direct-right.svg" @click="submitEntry" />
           </div>
         </div>
       </div>
@@ -92,56 +93,107 @@ export default {
   components: { KeyPad, IconButton },
   name: "Game",
   computed: {
+    textSoFar() {
+      return this.textSoFarArray.join("");
+    },
     lengthOfTextSoFar() {
-      return this.textSoFar.length;
+      return this.textSoFarArray.length;
+    },
+    lengthOfMemorizedTextSoFar() {
+      return Math.max(0, this.lengthOfTextSoFar - 1);
     },
     isValidRecollectionSoFar() {
       const expected = this.text.substring(0, this.userEntry.length);
       return this.userEntry == expected;
     },
     shortenedRecollectionSoFar() {
-      return `...${this.userEntry.substring(
-        Math.max(0, this.userEntry.length - 10)
-      )}`;
+      return `...${this.userEntryArray
+        .slice(Math.max(0, this.userEntryArray.length - 10))
+        .join("")}`;
+    },
+    userEntry() {
+      return this.userEntryArray.join("");
+    },
+    acceptKeyPress() {
+      return ["inplay", "recollecting"].includes(this.gameplayState);
     },
   },
   data() {
     return {
       score: 0,
       text: "",
-      textSoFar: "",
+      textSoFarArray: [],
       currentDigit: "a",
       currentCharacterIndex: 0,
-      userEntry: "",
+      userEntryArray: [],
       livesRemaining: 3,
-      gameplayState: "game_over",
+      gameplayState: "inplay",
       settings: {
         charset: "numeric",
       },
     };
   },
   methods: {
+    setWord() {
+      this.word = rs.generate({ length: 1000, charset: this.settings.charset });
+    },
     setCurrentCharacter() {
-      this.textSoFar = this.word.substring(0, this.currentCharacterIndex + 1);
       this.currentDigit = this.word[this.currentCharacterIndex];
-      this.userEntry = "";
+      this.textSoFarArray.push(this.currentDigit);
+      this.userEntryArray = [];
+      setTimeout(() => {
+        this.gameplayState = "recollecting";
+      }, 3000);
+    },
+    handleKeyPress(keyValue) {
+      if (!this.acceptKeyPress) return;
+
+      this.userEntryArray.push(keyValue);
+      this.gameplayState = "recollecting";
+    },
+    deleteCharacter() {
+      if (this.userEntryArray.length == 0) return;
+      this.userEntryArray.splice(this.userEntryArray.length - 1, 1);
     },
     submitEntry() {
-      if (this.userEntry.length == this.textSoFar.length) {
-        if (this.userEntry == this.textSoFar) {
-          this.currentCharacterIndex++;
-          this.score++;
-          this.setCurrentCharacter();
+      if (!this.acceptKeyPress) return;
 
-          this.$toasted.success("Correct!");
+      if (this.userEntryArray.length == this.textSoFarArray.length) {
+        if (this.userEntry == this.textSoFar) {
+          this.gameplayState = "correct_guess";
+          setTimeout(() => {
+            this.score++;
+            this.setCurrentCharacter();
+            this.currentCharacterIndex++;
+            this.gameplayState = "inplay";
+          }, 1500);
         } else {
-          this.$toasted.error("Incorrect guess. Try again!");
+          this.loseLife();
         }
+      } else {
+        this.loseLife();
       }
+    },
+    loseLife() {
+      this.livesRemaining--;
+
+      if (this.livesRemaining <= 0) {
+        this.gameplayState = "game_over";
+      } else {
+        this.gameplayState = "wrong_guess";
+        setTimeout(this.restartGame, 1500);
+      }
+    },
+    restartGame() {
+      this.setWord();
+      this.currentCharacterIndex = 0;
+      this.textSoFarArray = [];
+      this.setCurrentCharacter();
+      this.gameplayState = "inplay";
     },
   },
   mounted() {
-    this.word = rs.generate({ length: 1000, charset: this.settings.charset });
+    this.setWord();
     this.setCurrentCharacter();
   },
 };
