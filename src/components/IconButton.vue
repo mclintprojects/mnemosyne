@@ -1,5 +1,5 @@
 <template>
-  <div class="icon-button" @click="$emit('click')">
+  <div class="icon-button" @click="performClick">
     <img :src="require(`@/assets/images/${src}`)" />
   </div>
 </template>
@@ -9,6 +9,12 @@ export default {
   props: {
     src: { type: String, required: true },
     hexColor: { type: String, required: false },
+  },
+  methods: {
+    performClick() {
+      navigator.vibrate(200);
+      this.$emit("click");
+    },
   },
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div
     class="label-button-container flex flex-col justify-center items-center"
-    @click="$emit('click')"
+    @click="performClick"
   >
     <div class="label-button"></div>
     <p class="mt-1 text-sm text-gray-400 font-bold uppercase">{{ label }}</p>
@@ -12,6 +12,12 @@
 export default {
   props: {
     label: { type: String, required: true },
+  },
+  methods: {
+    performClick() {
+      navigator.vibrate(200);
+      this.$emit("click");
+    },
   },
 };
 </script>

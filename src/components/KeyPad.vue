@@ -11,6 +11,7 @@ export default {
   },
   methods: {
     performClick() {
+      navigator.vibrate(200);
       this.$emit("keypress", this.value);
     },
   },
