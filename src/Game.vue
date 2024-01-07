@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="mt-6 flex justify-end label-buttons">
-        <label-button label="Restart" @click="restartGame" />
+        <label-button label="Restart" @click="resetGame" />
       </div>
       <div class="keypads mt-12">
         <div class="keypads-h-grid">
@@ -209,7 +209,6 @@ export default {
 
       if (this.livesRemaining <= 0) {
         this.gameplayState = "game_over";
-        this.livesRemaining = 3;
         this.sounds.gameOver.play();
       } else {
         this.gameplayState = "wrong_guess";
@@ -223,6 +222,10 @@ export default {
       this.textSoFarArray = [];
       this.setCurrentCharacter();
       this.gameplayState = "inplay";
+    },
+    resetGame() {
+      this.livesRemaining = 3;
+      this.restartGame();
     },
   },
   mounted() {
