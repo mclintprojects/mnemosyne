@@ -169,15 +169,12 @@ export default {
       this.currentDigit = this.word[this.currentCharacterIndex];
       this.textSoFarArray.push(this.currentDigit);
       this.userEntryArray = [];
-      setTimeout(() => {
-        this.gameplayState = "recollecting";
-      }, 3000);
     },
     handleKeyPress(keyValue) {
       if (!this.acceptKeyPress) return;
 
       this.userEntryArray.push(keyValue);
-      this.gameplayState = "recollecting";
+      if (this.gameplayState == "inplay") this.gameplayState = "recollecting";
     },
     deleteCharacter() {
       if (this.userEntryArray.length == 0) return;
@@ -231,6 +228,10 @@ export default {
   mounted() {
     this.setWord();
     this.setCurrentCharacter();
+
+    setTimeout(() => {
+      if (this.gameplayState == "inplay") this.gameplayState = "recollecting";
+    }, 3000);
   },
 };
 </script>
