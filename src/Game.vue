@@ -154,6 +154,11 @@ export default {
       settings: {
         charset: "numeric",
       },
+      sounds: {
+        wrongGuess: new Audio(require("@/assets/sounds/wrongGuess.wav")),
+        correctGuess: new Audio(require("@/assets/sounds/correctGuess.wav")),
+        gameOver: new Audio(require("@/assets/sounds/gameOver.wav")),
+      },
     };
   },
   methods: {
@@ -184,6 +189,8 @@ export default {
       if (this.userEntryArray.length == this.textSoFarArray.length) {
         if (this.userEntry == this.textSoFar) {
           this.gameplayState = "correct_guess";
+          this.sounds.correctGuess.play();
+
           setTimeout(() => {
             this.score++;
             this.setCurrentCharacter();
@@ -198,12 +205,15 @@ export default {
       }
     },
     loseLife() {
-      this.livesRemaining--;
+      this.livesRemaining = Math.max(this.livesRemaining - 1, 0);
 
       if (this.livesRemaining <= 0) {
         this.gameplayState = "game_over";
+        this.livesRemaining = 3;
+        this.sounds.gameOver.play();
       } else {
         this.gameplayState = "wrong_guess";
+        this.sounds.wrongGuess.play();
         setTimeout(this.restartGame, 1500);
       }
     },
@@ -252,6 +262,7 @@ export default {
   height: 170px;
   color: var(--secondary-text-color);
   box-shadow: 0px 8px 0px 0px rgba(0, 0, 0, 0.54) inset;
+  user-select: none;
 }
 
 .keypads {
