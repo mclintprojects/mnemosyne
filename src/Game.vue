@@ -5,7 +5,7 @@
         <p class="font-bold text-gray-800 uppercase">RECLL-1</p>
         <p class="text-sm text-gray-500">Digits</p>
       </div>
-      <div class="screen mt-6">
+      <div class="screen mt-3">
         <div class="flex items-center justify-between">
           <div class="flex">
             <div class="flex items-center">
@@ -27,10 +27,10 @@
             </p>
           </div>
         </div>
-        <div class="w-full flex justify-center items-center mt-6">
-          <div v-if="gameplayState == 'inplay'">
+        <div class="w-full flex justify-center items-center mt-4">
+          <div v-if="gameplayState == 'inplay'" class="w-full">
             <p class="text-sm text-center mb-2 uppercase">Memorize this</p>
-            <p class="text-3xl font-bold text-center">
+            <p class="text-xl font-bold text-center break-words">
               {{ textSoFar }}
             </p>
           </div>
@@ -64,7 +64,7 @@
       <div class="mt-6 flex justify-end label-buttons">
         <label-button label="Restart" @click="resetGame" />
       </div>
-      <div class="keypads mt-6 lg:mt-12">
+      <div class="keypads mt-4 lg:mt-6">
         <div class="keypads-h-grid">
           <div class="keypads-h-grid-item">
             <key-pad :value="1" @keypress="handleKeyPress" />
@@ -279,7 +279,7 @@ export default {
     this.restorePersonalBestScore();
     this.setWord();
     this.setCurrentCharacter();
-    this.requestRecollection();
+    // this.requestRecollection();
   },
 };
 </script>
@@ -304,17 +304,17 @@ export default {
   margin: 0 auto;
   padding: 24px;
   padding-bottom: 32px;
-  border-radius: 20px;
+  border-radius: 30px;
   border: 2px solid rgb(199, 199, 199);
   user-select: none;
 }
 
 .screen {
   background-color: #181d23;
-  border-radius: 6px;
+  border-radius: 24px;
   width: 100%;
   padding: 24px;
-  height: 170px;
+  height: 250px;
   color: var(--secondary-text-color);
   box-shadow: 0px -6px 0px 0px rgba(0, 0, 0, 0.54) inset;
 }
@@ -339,14 +339,14 @@ export default {
 
 @media screen and (max-device-width: 375px) {
   .keypads {
-    row-gap: 8px;
+    row-gap: 4px;
   }
 }
 
 @media screen and (max-width: 812px) {
   #game {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     border-radius: 0px;
   }
 }

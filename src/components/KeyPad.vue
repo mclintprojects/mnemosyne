@@ -45,8 +45,8 @@ p {
 @media screen and (max-device-width: 375px) {
   .keypad {
     height: 24px;
-    width: 40px;
-    padding: 20px 34px;
+    width: 30px;
+    padding: 20px 24px;
   }
 
   p {
