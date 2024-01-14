@@ -197,7 +197,7 @@ export default {
       if (this.gameplayState == "game_over") {
         window.open(
           `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            `My high score is ${this.score}. Can you memorize longer digits? ${window.location.href}`
+            `My longest memorization was ${this.score}. Can you recall longer digits? ${window.location.href}`
           )}`,
           "_blank"
         );
