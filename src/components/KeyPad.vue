@@ -37,10 +37,9 @@ export default {
 }
 
 p {
-  color: #717171;
+  color: #5c5c5c;
   font-size: 32px;
   line-height: normal;
-  user-select: none;
 }
 
 @media screen and (max-device-width: 375px) {

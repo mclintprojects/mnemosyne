@@ -23,10 +23,6 @@ export default {
 </script>
 
 <style scoped>
-.label-button-container {
-  user-select: none;
-}
-
 .label-button-container:hover {
   cursor: pointer;
 }
