@@ -54,7 +54,10 @@
           </div>
           <div v-if="gameplayState == 'game_over'">
             <img src="./assets/images/judge.svg" class="mx-auto" />
-            <p class="text-sm mt-2">Game over! Tweet score?</p>
+            <p class="text-sm mt-2">
+              Game over! Tweet<b v-if="userHasANewBestScore"> best</b>
+              score?
+            </p>
           </div>
         </div>
       </div>
@@ -158,6 +161,8 @@ export default {
   data() {
     return {
       score: 0,
+      personalBestScore: 0,
+      userHasANewBestScore: false,
       text: "",
       textSoFarArray: [],
       currentDigit: "a",
@@ -227,6 +232,11 @@ export default {
     loseLife() {
       this.gameplayState = "game_over";
       this.playSound("gameOver");
+
+      if (this.score > this.personalBestScore) {
+        this.userHasANewBestScore = true;
+        this.savePersonalBestScore(this.score);
+      }
     },
     restartGame() {
       this.setWord();
@@ -237,6 +247,7 @@ export default {
     },
     resetGame() {
       this.score = 0;
+      this.userHasANewBestScore = false;
       this.restartGame();
       this.requestRecollection();
     },
@@ -254,8 +265,18 @@ export default {
           this.gameplayState = "recollecting";
       }, millisecondsToWaitBeforeRequestingRecollection);
     },
+    restorePersonalBestScore() {
+      this.personalBestScore = parseInt(
+        localStorage.getItem("m1game:pbs") || 0
+      );
+    },
+    savePersonalBestScore(score) {
+      this.personalBestScore = score;
+      localStorage.setItem("m1game:pbs", score);
+    },
   },
   mounted() {
+    this.restorePersonalBestScore();
     this.setWord();
     this.setCurrentCharacter();
     this.requestRecollection();
