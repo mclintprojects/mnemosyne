@@ -8,10 +8,6 @@
       <div class="screen mt-6">
         <div class="flex items-center justify-between">
           <div class="flex">
-            <div class="flex items-center mr-3">
-              <img src="./assets/images/heart.svg" />
-              <p class="ml-2">{{ livesRemaining }}</p>
-            </div>
             <div class="flex items-center">
               <img src="./assets/images/medal-star.svg" />
               <p class="ml-2">{{ score }}</p>
@@ -33,15 +29,15 @@
         </div>
         <div class="w-full flex justify-center items-center mt-6">
           <div v-if="gameplayState == 'inplay'">
+            <p class="text-sm text-center mb-2 uppercase">Memorize this</p>
             <p class="text-3xl font-bold text-center">
               {{ textSoFar }}
             </p>
-            <p class="text-sm uppercase text-center">memorize this :)</p>
           </div>
           <div v-if="gameplayState == 'recollecting'" class="w-full">
             <p class="text-sm uppercase">
-              recall the digit{{ lengthOfMemorizedTextSoFar == 0 ? "" : "s" }}
-              so far
+              digit{{ lengthOfMemorizedTextSoFar == 0 ? "" : "s" }}
+              so far:
             </p>
             <p class="text-2xl">
               <span class="blinking" v-if="userEntryArray.length == 0">_</span
@@ -50,11 +46,11 @@
           </div>
           <div v-if="gameplayState == 'correct_guess'">
             <img src="./assets/images/verify.svg" class="mx-auto" />
-            <p class="text-sm mt-2">Damn, you're good!</p>
+            <p class="text-sm mt-2">Correct!</p>
           </div>
           <div v-if="gameplayState == 'wrong_guess'">
             <img src="./assets/images/incorrect.svg" class="mx-auto" />
-            <p class="text-sm mt-2">That ain’t it!</p>
+            <p class="text-sm mt-2">That ain’t it, dawg</p>
           </div>
           <div v-if="gameplayState == 'game_over'">
             <img src="./assets/images/judge.svg" class="mx-auto" />
@@ -167,7 +163,6 @@ export default {
       currentDigit: "a",
       currentCharacterIndex: 0,
       userEntryArray: [],
-      livesRemaining: 3,
       gameplayState: "inplay",
       settings: {
         charset: "numeric",
@@ -230,21 +225,8 @@ export default {
       }
     },
     loseLife() {
-      this.livesRemaining = Math.max(this.livesRemaining - 1, 0);
-
-      if (this.livesRemaining <= 0) {
-        this.gameplayState = "game_over";
-        this.playSound("gameOver");
-      } else {
-        this.gameplayState = "wrong_guess";
-        this.playSound("wrongGuess");
-        this.$toasted.error(
-          `You have ${this.livesRemaining} lifeline${
-            this.livesRemaining == 1 ? "" : "s"
-          } remaining.`
-        );
-        setTimeout(this.restartGame, 1500);
-      }
+      this.gameplayState = "game_over";
+      this.playSound("gameOver");
     },
     restartGame() {
       this.setWord();
@@ -254,7 +236,6 @@ export default {
       this.gameplayState = "inplay";
     },
     resetGame() {
-      this.livesRemaining = 3;
       this.score = 0;
       this.restartGame();
       this.requestRecollection();
@@ -266,9 +247,11 @@ export default {
           : 5000 +
             Math.ceil(parseFloat(this.textSoFarArray.length) / parseFloat(5)) *
               2000;
-      console.log(millisecondsToWaitBeforeRequestingRecollection);
+
+      const score = new Number(this.score);
       setTimeout(() => {
-        if (this.gameplayState == "inplay") this.gameplayState = "recollecting";
+        if (this.gameplayState == "inplay" && score == this.score)
+          this.gameplayState = "recollecting";
       }, millisecondsToWaitBeforeRequestingRecollection);
     },
   },
