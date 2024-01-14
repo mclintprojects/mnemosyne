@@ -58,7 +58,7 @@
           </div>
           <div v-if="gameplayState == 'game_over'">
             <img src="./assets/images/judge.svg" class="mx-auto" />
-            <p class="text-sm mt-2">Game over!</p>
+            <p class="text-sm mt-2">Game over! Tweet score?</p>
           </div>
         </div>
       </div>
@@ -199,25 +199,34 @@ export default {
       this.userEntryArray.splice(this.userEntryArray.length - 1, 1);
     },
     submitEntry() {
-      if (!this.acceptKeyPress) return;
+      if (this.gameplayState == "game_over") {
+        window.open(
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+            `My high score is ${this.score}. Can you memorize longer digits? ${window.location.href}`
+          )}`,
+          "_blank"
+        );
+      } else {
+        if (!this.acceptKeyPress) return;
 
-      if (this.userEntryArray.length == this.textSoFarArray.length) {
-        if (this.userEntry == this.textSoFar) {
-          this.score++;
-          this.gameplayState = "correct_guess";
-          this.playSound("correctGuess");
+        if (this.userEntryArray.length == this.textSoFarArray.length) {
+          if (this.userEntry == this.textSoFar) {
+            this.score++;
+            this.gameplayState = "correct_guess";
+            this.playSound("correctGuess");
 
-          setTimeout(() => {
-            this.setCurrentCharacter();
-            this.currentCharacterIndex++;
-            this.gameplayState = "inplay";
-            this.requestRecollection();
-          }, 1500);
+            setTimeout(() => {
+              this.setCurrentCharacter();
+              this.currentCharacterIndex++;
+              this.gameplayState = "inplay";
+              this.requestRecollection();
+            }, 1500);
+          } else {
+            this.loseLife();
+          }
         } else {
           this.loseLife();
         }
-      } else {
-        this.loseLife();
       }
     },
     loseLife() {
