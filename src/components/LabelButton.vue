@@ -4,7 +4,7 @@
     @click="performClick"
   >
     <div class="label-button"></div>
-    <p class="mt-1 text-sm text-gray-400 font-bold uppercase">{{ label }}</p>
+    <p class="mt-1 text-sm text-gray-500 font-bold uppercase">{{ label }}</p>
   </div>
 </template>
 
@@ -35,8 +35,8 @@ export default {
   width: 24px;
   height: 24px;
   border-radius: 50px;
-  background: rgb(113, 131, 141);
-  box-shadow: 0px -3px 0px 0px #0f0f0f;
+  background: rgb(214, 222, 226);
+  box-shadow: 0px 2px 0px 0px #0f0f0f;
   transition: all 400ms;
 }
 

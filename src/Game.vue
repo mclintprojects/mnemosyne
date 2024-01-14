@@ -1,9 +1,9 @@
 <template>
   <div class="scene">
     <div id="game" class="shadow-2xl">
-      <div class="text-white">
-        <p class="font-bold uppercase">M1</p>
-        <p class="text-sm text-gray-300">Game player</p>
+      <div>
+        <p class="font-bold text-gray-800 uppercase">M1</p>
+        <p class="text-sm text-gray-500">Game player</p>
       </div>
       <div class="screen mt-6">
         <div class="flex items-center justify-between">
@@ -243,6 +243,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #f7f7f7;
 }
 
 #game {
@@ -256,16 +257,17 @@ export default {
   height: 844px;
   padding: 24px;
   border-radius: 20px;
+  border: 2px solid rgb(199, 199, 199);
 }
 
 .screen {
-  background-color: #67b094;
+  background-color: #181d23;
   border-radius: 6px;
   width: 100%;
   padding: 24px;
   height: 170px;
   color: var(--secondary-text-color);
-  box-shadow: 0px 8px 0px 0px rgba(0, 0, 0, 0.54) inset;
+  box-shadow: 0px -6px 0px 0px rgba(0, 0, 0, 0.54) inset;
   user-select: none;
 }
 

@@ -27,8 +27,8 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 50px;
-  background: #fff;
-  box-shadow: 0px -6px 0px 0px #111111;
+  background: #e1ddda;
+  box-shadow: 0px 4px 0px 0px #111111;
   transition: all 700ms;
 }
 
