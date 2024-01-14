@@ -39,9 +39,9 @@
               digit{{ lengthOfMemorizedTextSoFar == 0 ? "" : "s" }}
               so far:
             </p>
-            <p class="text-2xl">
+            <p class="text-xl">
               <span class="blinking" v-if="userEntryArray.length == 0">_</span
-              ><span v-else class="font-bold">{{ userEntry }}</span>
+              ><span v-else class="font-bold break-words">{{ userEntry }}</span>
             </p>
           </div>
           <div v-if="gameplayState == 'correct_guess'">
