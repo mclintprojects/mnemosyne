@@ -2,8 +2,8 @@
   <div class="scene">
     <div id="game" class="shadow-2xl">
       <div>
-        <p class="font-bold text-gray-800 uppercase">M1</p>
-        <p class="text-sm text-gray-500">Game player</p>
+        <p class="font-bold text-gray-800 uppercase">RECLL-1</p>
+        <p class="text-sm text-gray-500">Digits</p>
       </div>
       <div class="screen mt-6">
         <div class="flex items-center justify-between">
@@ -17,26 +17,35 @@
               <p class="ml-2">{{ score }}</p>
             </div>
           </div>
-          <div class="flex items-center">
+          <div
+            class="flex items-center"
+            v-if="
+              lengthOfMemorizedTextSoFar > 0 && gameplayState == 'recollecting'
+            "
+          >
             <img src="./assets/images/text.svg" />
             <p class="ml-2">
-              {{ lengthOfMemorizedTextSoFar }}
-              memorized
+              {{ lengthOfMemorizedTextSoFar + 1 }}
+              digit{{ lengthOfMemorizedTextSoFar + 1 == 1 ? "" : "s" }} to
+              recall
             </p>
           </div>
         </div>
         <div class="w-full flex justify-center items-center mt-6">
           <div v-if="gameplayState == 'inplay'">
-            <p class="text-6xl font-bold text-center">{{ currentDigit }}</p>
-            <p class="text-sm uppercase">memorize this!</p>
+            <p class="text-3xl font-bold text-center">
+              {{ textSoFar }}
+            </p>
+            <p class="text-sm uppercase text-center">memorize this :)</p>
           </div>
           <div v-if="gameplayState == 'recollecting'" class="w-full">
-            <p class="text-sm uppercase">what's the text so far?</p>
+            <p class="text-sm uppercase">
+              recall the digit{{ lengthOfMemorizedTextSoFar == 0 ? "" : "s" }}
+              so far
+            </p>
             <p class="text-2xl">
               <span class="blinking" v-if="userEntryArray.length == 0">_</span
-              ><span v-else class="font-bold">{{
-                shortenedRecollectionSoFar
-              }}</span>
+              ><span v-else class="font-bold">{{ userEntry }}</span>
             </p>
           </div>
           <div v-if="gameplayState == 'correct_guess'">
@@ -92,13 +101,21 @@
         </div>
         <div class="keypads-h-grid">
           <div class="keypads-h-grid-item">
-            <icon-button src="eraser.svg" @click="deleteCharacter" />
+            <text-button
+              text="<- del"
+              @click="deleteCharacter"
+              hexColor="ff7a7a"
+            />
           </div>
           <div class="keypads-h-grid-item">
             <key-pad :value="0" @keypress="handleKeyPress" />
           </div>
           <div class="keypads-h-grid-item">
-            <icon-button src="direct-right.svg" @click="submitEntry" />
+            <text-button
+              text="-> Enter"
+              @click="submitEntry"
+              hexColor="67B094"
+            />
           </div>
         </div>
       </div>
@@ -109,11 +126,17 @@
 <script>
 import rs from "randomstring";
 import KeyPad from "./components/KeyPad.vue";
-import IconButton from "./components/IconButton.vue";
+import TextButton from "./components/TextButton.vue";
 import LabelButton from "./components/LabelButton.vue";
 
+const sounds = {
+  wrongGuess: new Audio(require("@/assets/sounds/wrongGuess.wav")),
+  correctGuess: new Audio(require("@/assets/sounds/correctGuess.wav")),
+  gameOver: new Audio(require("@/assets/sounds/gameOver.wav")),
+};
+
 export default {
-  components: { KeyPad, IconButton, LabelButton },
+  components: { KeyPad, TextButton, LabelButton },
   name: "Game",
   computed: {
     textSoFar() {
@@ -128,11 +151,6 @@ export default {
     isValidRecollectionSoFar() {
       const expected = this.text.substring(0, this.userEntry.length);
       return this.userEntry == expected;
-    },
-    shortenedRecollectionSoFar() {
-      return `...${this.userEntryArray
-        .slice(Math.max(0, this.userEntryArray.length - 10))
-        .join("")}`;
     },
     userEntry() {
       return this.userEntryArray.join("");
@@ -154,14 +172,14 @@ export default {
       settings: {
         charset: "numeric",
       },
-      sounds: {
-        wrongGuess: new Audio(require("@/assets/sounds/wrongGuess.wav")),
-        correctGuess: new Audio(require("@/assets/sounds/correctGuess.wav")),
-        gameOver: new Audio(require("@/assets/sounds/gameOver.wav")),
-      },
     };
   },
   methods: {
+    playSound(sound) {
+      const audio = sounds[sound];
+      audio.currentTime = 0;
+      audio.play();
+    },
     setWord() {
       this.word = rs.generate({ length: 1000, charset: this.settings.charset });
     },
@@ -185,14 +203,15 @@ export default {
 
       if (this.userEntryArray.length == this.textSoFarArray.length) {
         if (this.userEntry == this.textSoFar) {
+          this.score++;
           this.gameplayState = "correct_guess";
-          this.sounds.correctGuess.play();
+          this.playSound("correctGuess");
 
           setTimeout(() => {
-            this.score++;
             this.setCurrentCharacter();
             this.currentCharacterIndex++;
             this.gameplayState = "inplay";
+            this.requestRecollection();
           }, 1500);
         } else {
           this.loseLife();
@@ -206,10 +225,15 @@ export default {
 
       if (this.livesRemaining <= 0) {
         this.gameplayState = "game_over";
-        this.sounds.gameOver.play();
+        this.playSound("gameOver");
       } else {
         this.gameplayState = "wrong_guess";
-        this.sounds.wrongGuess.play();
+        this.playSound("wrongGuess");
+        this.$toasted.error(
+          `You have ${this.livesRemaining} lifeline${
+            this.livesRemaining == 1 ? "" : "s"
+          } remaining.`
+        );
         setTimeout(this.restartGame, 1500);
       }
     },
@@ -223,15 +247,25 @@ export default {
     resetGame() {
       this.livesRemaining = 3;
       this.restartGame();
+      this.requestRecollection();
+    },
+    requestRecollection() {
+      const millisecondsToWaitBeforeRequestingRecollection =
+        this.textSoFarArray.length <= 5
+          ? 5000
+          : 5000 +
+            Math.ceil(parseFloat(this.textSoFarArray.length) / parseFloat(5)) *
+              2000;
+      console.log(millisecondsToWaitBeforeRequestingRecollection);
+      setTimeout(() => {
+        if (this.gameplayState == "inplay") this.gameplayState = "recollecting";
+      }, millisecondsToWaitBeforeRequestingRecollection);
     },
   },
   mounted() {
     this.setWord();
     this.setCurrentCharacter();
-
-    setTimeout(() => {
-      if (this.gameplayState == "inplay") this.gameplayState = "recollecting";
-    }, 3000);
+    this.requestRecollection();
   },
 };
 </script>
@@ -258,6 +292,7 @@ export default {
   padding: 24px;
   border-radius: 20px;
   border: 2px solid rgb(199, 199, 199);
+  user-select: none;
 }
 
 .screen {
@@ -268,7 +303,6 @@ export default {
   height: 170px;
   color: var(--secondary-text-color);
   box-shadow: 0px -6px 0px 0px rgba(0, 0, 0, 0.54) inset;
-  user-select: none;
 }
 
 .keypads {
