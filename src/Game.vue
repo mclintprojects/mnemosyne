@@ -255,6 +255,7 @@ export default {
     },
     resetGame() {
       this.livesRemaining = 3;
+      this.score = 0;
       this.restartGame();
       this.requestRecollection();
     },
