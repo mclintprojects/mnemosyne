@@ -65,7 +65,7 @@
       <div class="mt-6 flex justify-end label-buttons">
         <label-button label="Restart" @click="resetGame" />
       </div>
-      <div class="keypads mt-12">
+      <div class="keypads mt-6 lg:mt-12">
         <div class="keypads-h-grid">
           <div class="keypads-h-grid-item">
             <key-pad :value="1" @keypress="handleKeyPress" />
@@ -288,8 +288,8 @@ export default {
   background: var(--background-color);
   width: 390px;
   margin: 0 auto;
-  height: 844px;
   padding: 24px;
+  padding-bottom: 32px;
   border-radius: 20px;
   border: 2px solid rgb(199, 199, 199);
   user-select: none;
@@ -334,6 +334,11 @@ export default {
     width: 100vw;
     height: 100vh;
     border-radius: 0px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  #game {
   }
 }
 </style>
