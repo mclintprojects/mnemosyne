@@ -1,24 +1,15 @@
-# mnemosyne
+# digits
+
+First of a few small games I plan to make this year. How many digits can you memorize? Play in your browser: https://digitsgame.netlify.app.
 
 ## Project setup
+
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### Run the app locally
+
 ```
 yarn serve
 ```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
