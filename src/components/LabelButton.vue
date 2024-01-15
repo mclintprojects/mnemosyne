@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     performClick() {
-      navigator.vibrate(200);
+      if (navigator.vibrate) navigator.vibrate(200);
       this.$emit("click");
     },
   },
