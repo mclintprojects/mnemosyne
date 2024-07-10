@@ -53,6 +53,9 @@
             <p class="text-sm mt-2">That ain’t it, dawg</p>
           </div>
           <div v-if="gameplayState == 'game_over'">
+            <p class="mb-8 text-center font-bold break-words">
+              {{ textSoFar }}
+            </p>
             <img src="./assets/images/judge.svg" class="mx-auto" />
             <p class="text-sm mt-2">
               Game over! Tweet<b v-if="userHasANewBestScore"> best</b>
