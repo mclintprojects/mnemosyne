@@ -274,12 +274,28 @@ export default {
       this.personalBestScore = score;
       localStorage.setItem("m1game:pbs", score);
     },
+    preprocessKeyPress(event) {
+      if (event.key == "Backspace" || event.key == "Delete") {
+        this.deleteCharacter();
+      } else if (event.key == "Enter") {
+        this.submitEntry();
+      } else if (
+        event.code.startsWith("Digit") ||
+        event.code.startsWith("Numpad")
+      ) {
+        this.handleKeyPress(event.key);
+      }
+    },
   },
   mounted() {
     this.restorePersonalBestScore();
     this.setWord();
     this.setCurrentCharacter();
-    // this.requestRecollection();
+
+    window.document.addEventListener("keydown", this.preprocessKeyPress);
+  },
+  destroyed() {
+    window.document.removeEventListener("keydown", this.preprocessKeyPress);
   },
 };
 </script>
